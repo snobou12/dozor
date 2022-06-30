@@ -1,0 +1,32 @@
+
+.page_start {
+	div {
+		font-weight: 700;
+		text-transform: uppercase;
+	}
+}
+
+
+.page_timer {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin-bottom: 18px;
+}
+.timer_upper {
+	font-size: 15px;
+	line-height: 18px;
+	margin-bottom: 3px;
+}
+.timer_time {
+	font-size: 40px;
+	line-height: 47px;
+}
+.page_start__message {
+	font-size: 16px;
+	line-height: 140%;
+	text-align: center;
+}
+
+

@@ -1,0 +1,15 @@
+.page_hint__hint-point{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    span{
+        &:first-child{
+            line-height: 19px;
+            margin-bottom: 5px;
+        }
+        &:last-child{
+            line-height: 140%;
+        }
+    }
+}

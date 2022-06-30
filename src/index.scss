@@ -1,0 +1,123 @@
+/** @format */
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+	font-family: "Roboto", sans-serif;
+	color: #fff;
+	font-weight: 500;
+}
+
+ul[class],
+ol[class] {
+	padding: 0;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+	margin: 0;
+}
+
+body {
+	min-height: 100vh;
+	scroll-behavior: smooth;
+	text-rendering: optimizeSpeed;
+	line-height: 1.5;
+}
+
+ul[class],
+ol[class] {
+	list-style: none;
+}
+
+a:not([class]) {
+	text-decoration-skip-ink: auto;
+}
+
+img {
+	max-width: 100%;
+	display: block;
+}
+
+article > * + * {
+	margin-top: 1em;
+}
+
+input,
+button,
+textarea,
+select {
+	font: inherit;
+}
+
+.custom_btn {
+	cursor: pointer;
+	border: 2px solid #ffffff;
+	outline: none;
+	background-color: transparent;
+	border-radius: 5px;
+	font-weight: 500;
+	font-size: 12px;
+	line-height: 14px;
+	text-transform: uppercase;
+	padding: 5px 20px;
+	text-align: center;
+}
+
+.Toastify__toast-container {
+	background: transparent;
+}
+.Toastify__toast {
+	background: linear-gradient(180deg, #414040 0%, #121212 100%) !important;
+}
+.Toastify__toast-body > div:last-child {
+	display: flex;
+	justify-content: center !important;
+	align-items: flex-start !important;
+	text-align: left !important;
+}
+.Toastify__progress-bar--error {
+	background: #d4001a !important;
+	height: 3px !important;
+}
+
+.Toastify__toast--error {
+	.Toastify__toast-body {
+		div {
+			&:first-child {
+				display: none !important;
+			}
+			&:last-child {
+				font-size: 12px !important;
+				line-height: 14px !important;
+				color: #fff;
+				text-transform: uppercase;
+				font-weight: 600;
+			}
+		}
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
