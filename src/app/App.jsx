@@ -3,6 +3,8 @@
 import React from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { useWindowSize } from "../hooks/useWindowSize";
+import { useConnect } from "../hooks/useConnect";
+
 import { useDispatch, useSelector } from "react-redux";
 import { ToastContainer } from "react-toastify";
 import {
@@ -13,7 +15,14 @@ import {
 	handleChangeTransitTime,
 	handleChangeProcessingStatus,
 } from "../redux/reducers/game/gameSlice";
-import { CodePage, Empty, HintPage, PointHintPage, StartPage } from "../pages";
+import {
+	CodePage,
+	EmptyPage,
+	GameOverPage,
+	HintPage,
+	PointHintPage,
+	StartPage,
+} from "../pages";
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
 import "react-toastify/dist/ReactToastify.css";
@@ -28,20 +37,29 @@ const App = () => {
 	// React.useEffect(() => {
 	// 	console.log(data);
 	// }, [isLoading]);
-	const { device } = useSelector(state => state.designSlice);
-	useWindowSize(); // если нужно будет добавить рендер только для разных девайсов
+	const { device, fontSize } = useSelector(state => state.designSlice);
+	useWindowSize(); // если нужно будет добавить рендер только для разных девайсов + fontSize
 	const { actionData, pointData } = useSelector(state => state.gameSlice);
 
+	// handle cookie set
 	// React.useEffect(() => {
 	// 	document.cookie =
-	// 		"token=eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vdHJ1c3R5YXBwLmNvbS8iLCJzdWIiOiJ0ZXN0IiwiZXhwIjoxNjU3MDg1Mzk2fQ.LrutvrZR06sqdKedg8-qssNDa2NBtr5bzb7cnHMV448; max-age=99999";
+	// 		"token=eyJhbGciOiJIUzI1NiJ9.eyJ0ZWFtSWQiOiIxMyIsImV4cCI6MTY1NzI2MDU1MiwidXNlcm5hbWUiOiJ0ZXN0In0.YbQe7Lm8VuJLR4OCRPxOXy3AHEWNkqR1HJf8jRv_T6o; max-age=99999";
 	// }, []);
+
+	//cookie parse
+	function getCookie(name) {
+		let value = "; " + document.cookie;
+		let parts = value.split("; " + name + "=");
+		if (parts.length == 2) return parts.pop().split(";").shift();
+	}
+	//WS
 	React.useEffect(() => {
-		const socket = new SockJS("https://solbaumanec.ru/dozor");
+		const socket = new SockJS("https://solbaumanec.ru/socket/dozor");
 		const stompClient = Stomp.over(socket);
-		// stompClient.debug = null; // Отключить сообщения от stomp
+		stompClient.debug = null; // Отключить сообщения от stomp
 		stompClient.connect({}, () => {
-			stompClient.subscribe("/action", function (msg) {
+			stompClient.subscribe(`/action`, function (msg) {
 				let json = JSON.parse(msg.body);
 				let { responseType, object } = json;
 				if (responseType === "DOZOR_STATUS") {
@@ -61,11 +79,9 @@ const App = () => {
 						})
 					);
 				}
-
-				// console.log(json);
 			});
 
-			stompClient.subscribe("/directlyTeam/blue", function (msg) {
+			stompClient.subscribe(`/direct/${getCookie("token")}`, function (msg) {
 				let json = JSON.parse(msg.body);
 
 				const { responseType, object } = json;
@@ -86,11 +102,20 @@ const App = () => {
 					dispatch(handleChangeTransitTime(object));
 				}
 
+				if (responseType === "LAST_POINT_FINISHED") {
+					dispatch(
+						handleChangeActionData({
+							dozor_status: object,
+							time: "",
+						})
+					);
+				}
+
 				// console.log(json);
 			}); // пример
 		});
 	}, []);
-
+	//routing
 	React.useEffect(() => {
 		if (
 			actionData.dozor_status === "DEVELOP" &&
@@ -120,13 +145,23 @@ const App = () => {
 		) {
 			navigate("/hint-point");
 		}
+
+		if (
+			actionData.dozor_status === "LAST_POINT_FINISHED" &&
+			location.pathname !== "/game-over"
+		) {
+			navigate("/game-over");
+		}
 	}, [
 		actionData.dozor_status,
 		pointData,
 		pointData.pointProcessingStatus,
 		location.pathname,
 	]);
-
+	//fontSize
+	React.useEffect(() => {
+		document.querySelector("html").style.fontSize = `${fontSize}px`;
+	}, [fontSize]);
 	return (
 		<div className="app">
 			<div className={`app__content app__content--${device}`}>
@@ -140,6 +175,7 @@ const App = () => {
 						element={
 							<CodePage
 								enteredCodes={pointData.dozorPoint.enteredCodes || []}
+								round={pointData?.dozorPoint?.title?.split(" ")[1]}
 								time={pointData.roundTime}
 								codes
 							/>
@@ -167,9 +203,11 @@ const App = () => {
 							/>
 						}
 					/>
+					{/* Конец игры страница */}
+					<Route path="/game-over" element={<GameOverPage />} />
 
 					{/* Пустая страница */}
-					<Route path="/empty" element={<Empty />} />
+					<Route path="/empty" element={<EmptyPage />} />
 				</Routes>
 				<ToastContainer />
 			</div>

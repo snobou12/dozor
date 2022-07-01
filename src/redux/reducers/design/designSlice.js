@@ -5,13 +5,16 @@ const designSlice = createSlice({
 	name: "design",
 	initialState: {
 		device: "desktop",
+		fontSize:10,
 	},
 	reducers: {
-		handleChangeDevice(state, action) {
-			state.device = action.payload;
+		handleChangeDesign(state, action) {
+			let {device, fz} = action.payload;
+			state.device = device;
+			state.fontSize=fz;
 		},
 	},
 });
 
-export const { handleChangeDevice } = designSlice.actions;
+export const { handleChangeDesign } = designSlice.actions;
 export default designSlice.reducer;

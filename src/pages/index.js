@@ -8,7 +8,10 @@ export {default as HintPage} from "./HintPage/HintPage";
 
 export {default as PointHintPage} from "./PointHintPage/PointHintPage";
 
-export {default as Empty} from "./Empty/Empty";
+export {default as GameOverPage} from "./GameOverPage/GameOverPage";
+
+
+export {default as EmptyPage} from "./EmptyPage/EmptyPage";
 
 
 

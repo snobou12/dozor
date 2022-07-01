@@ -6,7 +6,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useCode } from "../../hooks/useCode";
 import "./CodePage.scss";
-const CodePage = ({ time, enteredCodes }) => {
+const CodePage = ({ time, enteredCodes, round }) => {
 	const [codes, setCodes] = React.useState(["", "", "", "", "", ""]);
 	const { isLoading, data, error, refetch } = useCode(codes.join(""));
 
@@ -84,7 +84,7 @@ const CodePage = ({ time, enteredCodes }) => {
 				<div className="page_code__table">
 					<div className="code__table_title">введеные коды</div>
 					<div className="code__table_upper">
-						<span>раунд 1</span>
+						<span>раунд {round}</span>
 						<span>{getDifference() || 0} очков</span>
 					</div>
 					<div className="code__table_codes">

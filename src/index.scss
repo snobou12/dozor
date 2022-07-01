@@ -37,7 +37,6 @@ body {
 	min-height: 100vh;
 	scroll-behavior: smooth;
 	text-rendering: optimizeSpeed;
-	line-height: 1.5;
 }
 
 ul[class],
@@ -72,8 +71,8 @@ select {
 	background-color: transparent;
 	border-radius: 5px;
 	font-weight: 500;
-	font-size: 12px;
-	line-height: 14px;
+	font-size: 1.2rem;
+	line-height: 1.4rem;
 	text-transform: uppercase;
 	padding: 5px 20px;
 	text-align: center;
@@ -103,8 +102,8 @@ select {
 				display: none !important;
 			}
 			&:last-child {
-				font-size: 12px !important;
-				line-height: 14px !important;
+				font-size: 1.2rem !important;
+				line-height: 1.2rem !important;
 				color: #fff;
 				text-transform: uppercase;
 				font-weight: 600;

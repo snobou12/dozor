@@ -13,8 +13,8 @@
 }
 .code__title {
 	font-weight: 400;
-	font-size: 18px;
-	line-height: 21px;
+	font-size: 1.8rem;
+	line-height: 1.8rem;
 	margin-bottom: 10px;
 }
 .code__inputs {
@@ -22,8 +22,8 @@
 	justify-content: center;
 	align-items: center;
 	input {
-		width: 30px;
-		height: 30px;
+		width: 3rem;
+		height: 3rem;
 		border: 2px solid #ffffff;
 		background-color: transparent;
 		border-radius: 5px;
@@ -46,8 +46,8 @@
 	align-items: center;
 }
 .code__table_title {
-	font-size: 12px;
-	line-height: 14px;
+	font-size: 1.2rem;
+	line-height: 1.2rem;
 	margin-bottom: 10px;
 }
 .code__table_upper {
@@ -60,15 +60,15 @@
 	padding-top: 2px;
 	padding-bottom: 2px;
 	span {
-		font-size: 16px;
-		line-height: 19px;
+		font-size: 1.6rem;
+		line-height: 1.6rem;
 	}
 }
 .code__table_codes {
 	padding-top: 2px;
 	padding-bottom: 2px;
 	width: 80%;
-	height: 300px;
+	height: 200px;
 	padding-right: 8px;
 	overflow-y: scroll;
 }
@@ -77,6 +77,8 @@
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	font-size: 1.6rem;
+	line-height: 1.6rem;
 	&:not(&:last-child) {
 		margin-bottom: 5px;
 	}
