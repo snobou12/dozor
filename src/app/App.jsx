@@ -14,6 +14,7 @@ import {
 	handleChangeTransitPoint,
 	handleChangeTransitTime,
 	handleChangeProcessingStatus,
+	handleAddCode,
 } from "../redux/reducers/game/gameSlice";
 import {
 	CodePage,
@@ -22,6 +23,7 @@ import {
 	HintPage,
 	PointHintPage,
 	StartPage,
+	AuthPage,
 } from "../pages";
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
@@ -33,10 +35,8 @@ const App = () => {
 	const dispatch = useDispatch();
 	const location = useLocation();
 	const navigate = useNavigate();
-	// const { isLoading, data, error } = useConnect();
-	// React.useEffect(() => {
-	// 	console.log(data);
-	// }, [isLoading]);
+	useConnect();
+
 	const { device, fontSize } = useSelector(state => state.designSlice);
 	useWindowSize(); // если нужно будет добавить рендер только для разных девайсов + fontSize
 	const { actionData, pointData } = useSelector(state => state.gameSlice);
@@ -44,15 +44,15 @@ const App = () => {
 	// handle cookie set
 	// React.useEffect(() => {
 	// 	document.cookie =
-	// 		"token=eyJhbGciOiJIUzI1NiJ9.eyJ0ZWFtSWQiOiIxMyIsImV4cCI6MTY1NzI2MDU1MiwidXNlcm5hbWUiOiJ0ZXN0In0.YbQe7Lm8VuJLR4OCRPxOXy3AHEWNkqR1HJf8jRv_T6o; max-age=99999";
+	// 		"token=eyJhbGciOiJIUzI1NiJ9.eyJ0ZWFtSWQiOiIxMyIsImV4cCI6MTY1NzUyMjU3MSwidXNlcm5hbWUiOiJ0ZXN0In0.t7UCxaFGwsf1TPiE7hf_TMlyC7keF-BQTDsFIIwqDm4; max-age=99999";
 	// }, []);
 
 	//cookie parse
-	function getCookie(name) {
-		let value = "; " + document.cookie;
-		let parts = value.split("; " + name + "=");
-		if (parts.length == 2) return parts.pop().split(";").shift();
-	}
+	// function getCookie(name) {
+	// 	let value = "; " + document.cookie;
+	// 	let parts = value.split("; " + name + "=");
+	// 	if (parts.length == 2) return parts.pop().split(";").shift();
+	// }
 	//WS
 	React.useEffect(() => {
 		const socket = new SockJS("https://solbaumanec.ru/socket/dozor");
@@ -81,40 +81,47 @@ const App = () => {
 				}
 			});
 
-			stompClient.subscribe(`/direct/${getCookie("token")}`, function (msg) {
-				let json = JSON.parse(msg.body);
+			stompClient.subscribe(
+				`/direct/${localStorage.getItem("dozor-token")}`,
+				function (msg) {
+					let json = JSON.parse(msg.body);
 
-				const { responseType, object } = json;
-				if (responseType === "POINT_DATA") {
-					if (object.pointProcessingStatus === "ROUND") {
-						dispatch(handleChangePointData(object));
-					} else if (object.pointProcessingStatus === "TRANSIT") {
-						dispatch(handleChangeProcessingStatus("TRANSIT"));
-						dispatch(handleChangeTransitPoint(object));
+					const { responseType, object } = json;
+					if (responseType === "POINT_DATA") {
+						if (object.pointProcessingStatus === "ROUND") {
+							dispatch(handleChangePointData(object));
+						} else if (object.pointProcessingStatus === "TRANSIT") {
+							dispatch(handleChangeProcessingStatus("TRANSIT"));
+							dispatch(handleChangeTransitPoint(object));
+						}
 					}
-				}
 
-				if (responseType === "ROUND_TIME") {
-					dispatch(handleChangeRoundTime(object));
-				}
+					if (responseType === "ROUND_TIME") {
+						dispatch(handleChangeRoundTime(object));
+					}
 
-				if (responseType === "TRANSIT_TIME") {
-					dispatch(handleChangeTransitTime(object));
-				}
+					if (responseType === "TRANSIT_TIME") {
+						dispatch(handleChangeTransitTime(object));
+					}
 
-				if (responseType === "LAST_POINT_FINISHED") {
-					dispatch(
-						handleChangeActionData({
-							dozor_status: object,
-							time: "",
-						})
-					);
-				}
+					if (responseType === "LAST_POINT_FINISHED") {
+						dispatch(
+							handleChangeActionData({
+								dozor_status: object,
+								time: "",
+							})
+						);
+					}
+					if (responseType === "ENTERED_CODE") {
+						dispatch(handleAddCode(object));
+					}
 
-				// console.log(json);
-			}); // пример
+					// console.log(json);
+				}
+			); // пример
 		});
 	}, []);
+
 	//routing
 	React.useEffect(() => {
 		if (
@@ -205,6 +212,9 @@ const App = () => {
 					/>
 					{/* Конец игры страница */}
 					<Route path="/game-over" element={<GameOverPage />} />
+					{/* Страница авторизации */}
+
+					<Route path="/auth" element={<AuthPage />} />
 
 					{/* Пустая страница */}
 					<Route path="/empty" element={<EmptyPage />} />

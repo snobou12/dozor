@@ -1,21 +1,12 @@
-/** @format */
-
-import axios from "axios";
-const API_URL = "https://solbaumanec.ru/dozor";
-
-const instance = axios.create({
-	withCredentials: true,
-	baseURL: API_URL,
-	headers: {
-		"Access-Control-Allow-Origin": "*",
-		"Access-Control-Allow-Credentials": true,
-	},
-});
+import $api from "../api/index"; 
 export const ClientService = {
+	async auth(login,password){
+		return $api.get(`/auth/login?password=${password}&username=${login}`)
+	},
 	async connect() {
-		return instance.get("/connect");
+		return $api.get("/dozor/connect");
 	},
 	async postCode(code) {
-		return instance.post("/code/save", { code: code });
+		return $api.post(`/dozor/code/save?code=${code}`);
 	},
 };

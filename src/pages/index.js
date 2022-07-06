@@ -13,6 +13,9 @@ export {default as GameOverPage} from "./GameOverPage/GameOverPage";
 
 export {default as EmptyPage} from "./EmptyPage/EmptyPage";
 
+export {default as AuthPage} from "./AuthPage/AuthPage";
+
+
 
 
 

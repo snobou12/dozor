@@ -1,5 +1,5 @@
 
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice,current } from "@reduxjs/toolkit";
 
 const gameSlice = createSlice({
 	name: "game",
@@ -47,9 +47,16 @@ const gameSlice = createSlice({
         },
         handleChangeTransitTime(state,action){
             state.pointData.transitTime=action.payload
+        },
+        
+        handleAddCode(state,action){
+
+            let prev = current(state.pointData.dozorPoint.enteredCodes);
+            console.log(prev);
+            state.pointData.dozorPoint.enteredCodes= [...prev,action.payload];
         }
 	},
 });
 
-export const { handleChangeProcessingStatus,handleChangeActionData,handleChangePointData,handleChangeRoundTime,handleChangeTransitPoint,handleChangeTransitTime } = gameSlice.actions;
+export const { handleChangeProcessingStatus,handleChangeActionData,handleChangePointData,handleChangeRoundTime,handleChangeTransitPoint,handleChangeTransitTime,handleAddCode } = gameSlice.actions;
 export default gameSlice.reducer;
