@@ -1,7 +1,7 @@
 /** @format */
 
 import React from "react";
-import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { useConnect } from "../hooks/useConnect";
 
@@ -30,16 +30,20 @@ import SockJS from "sockjs-client";
 import "react-toastify/dist/ReactToastify.css";
 
 import "./App.scss";
+import { useRouting } from "../hooks/useRouting";
 
 const App = () => {
 	const dispatch = useDispatch();
-	const location = useLocation();
-	const navigate = useNavigate();
+
 	useConnect();
 
 	const { device, fontSize } = useSelector(state => state.designSlice);
+
 	useWindowSize(); // если нужно будет добавить рендер только для разных девайсов + fontSize
+
 	const { actionData, pointData } = useSelector(state => state.gameSlice);
+	//routing
+	useRouting(actionData, pointData);
 
 	// handle cookie set
 	// React.useEffect(() => {
@@ -85,6 +89,7 @@ const App = () => {
 				`/direct/${localStorage.getItem("dozor-token")}`,
 				function (msg) {
 					let json = JSON.parse(msg.body);
+					console.log(json);
 
 					const { responseType, object } = json;
 					if (responseType === "POINT_DATA") {
@@ -122,49 +127,6 @@ const App = () => {
 		});
 	}, []);
 
-	//routing
-	React.useEffect(() => {
-		if (
-			actionData.dozor_status === "DEVELOP" &&
-			location.pathname !== "/empty"
-		) {
-			navigate("/empty");
-		}
-		if (
-			actionData.dozor_status === "PRE_START_TIME" &&
-			location.pathname !== "/"
-		) {
-			navigate("/");
-		}
-		if (
-			actionData.dozor_status === "ACTIVE" &&
-			pointData.pointProcessingStatus === "ROUND" &&
-			location.pathname !== "/code" &&
-			location.pathname !== "/hint"
-		) {
-			navigate("/code");
-		}
-
-		if (
-			actionData.dozor_status === "ACTIVE" &&
-			pointData.pointProcessingStatus === "TRANSIT" &&
-			location.pathname !== "/hint-point"
-		) {
-			navigate("/hint-point");
-		}
-
-		if (
-			actionData.dozor_status === "LAST_POINT_FINISHED" &&
-			location.pathname !== "/game-over"
-		) {
-			navigate("/game-over");
-		}
-	}, [
-		actionData.dozor_status,
-		pointData,
-		pointData.pointProcessingStatus,
-		location.pathname,
-	]);
 	//fontSize
 	React.useEffect(() => {
 		document.querySelector("html").style.fontSize = `${fontSize}px`;
@@ -205,7 +167,7 @@ const App = () => {
 						path="/hint-point"
 						element={
 							<PointHintPage
-								hint={pointData?.transitDozorPoint?.onPointHint?.text}
+								hint={pointData?.dozorPoint?.transitionHint?.text}
 								time={pointData.transitTime}
 							/>
 						}

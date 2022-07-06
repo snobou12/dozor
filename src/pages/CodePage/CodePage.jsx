@@ -1,6 +1,3 @@
-/** @format */
-
-import axios from "axios";
 import classNames from "classnames";
 import React from "react";
 import { Link } from "react-router-dom";
@@ -35,6 +32,7 @@ const CodePage = ({ time, enteredCodes, round }) => {
 	const handlePostCode = () => {
 		if (codes.every(el => !!el)) {
 			refetch();
+			setCodes(["", "", "", "", "", ""]);
 		}
 	};
 	function getDifference() {
