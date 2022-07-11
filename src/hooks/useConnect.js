@@ -1,4 +1,3 @@
-/** @format */
 
 import { useQuery } from "react-query";
 import { useDispatch } from "react-redux";
@@ -8,6 +7,7 @@ import {
 	handleChangeCodes,
 	handleChangeProcessingStatus,
 	handleChangeDozorPointHint,
+	handleChangeTransitPoint,
 } from "../redux/reducers/game/gameSlice";
 import { ClientService } from "../services/client.service";
 export const useConnect = () => {
@@ -20,8 +20,9 @@ export const useConnect = () => {
 	} = useQuery("dozor connect", () => ClientService.connect(), {
 		onSuccess: ({ data }) => {
 			if (data?.body) {
+
 				let dozorData = data.body;
-				console.log("kek", dozorData);
+				console.log(data)
 				if (dozorData.dozorSequenceOfPassingGameSet)
 					if (dozorData.status === "WAITING_ACTIVE") {
 						dispatch(
@@ -46,7 +47,6 @@ export const useConnect = () => {
 						);
 
 						let statusData = dozorData.dozorSequenceOfPassingGameSet[0];
-						console.log(statusData);
 						let dozorPoint = statusData.dozorPoint;
 						let pointProcessingStatus = statusData.pointProcessingStatus;
 						dispatch(handleChangeProcessingStatus(pointProcessingStatus));
@@ -59,6 +59,8 @@ export const useConnect = () => {
 							}
 						}
 						if (pointProcessingStatus === "TRANSIT") {
+							dispatch(handleChangeProcessingStatus(pointProcessingStatus));
+							dispatch(handleChangeTransitPoint(dozorPoint));
 						}
 					}
 			} else {

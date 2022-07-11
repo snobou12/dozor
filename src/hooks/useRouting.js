@@ -36,7 +36,7 @@ export function useRouting(actionData,pointData) {
 		}
 
 		if (
-			actionData.dozor_status === "LAST_POINT_FINISHED" &&
+			actionData.dozor_status === "Game is over" &&
 			location.pathname !== "/game-over"
 		) {
 			navigate("/game-over");

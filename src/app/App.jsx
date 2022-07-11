@@ -1,4 +1,3 @@
-/** @format */
 
 import React from "react";
 import { Routes, Route } from "react-router-dom";
@@ -89,7 +88,6 @@ const App = () => {
 				`/direct/${localStorage.getItem("dozor-token")}`,
 				function (msg) {
 					let json = JSON.parse(msg.body);
-					console.log(json);
 
 					const { responseType, object } = json;
 					if (responseType === "POINT_DATA") {
@@ -167,7 +165,10 @@ const App = () => {
 						path="/hint-point"
 						element={
 							<PointHintPage
-								hint={pointData?.dozorPoint?.transitionHint?.text}
+								hint={
+									pointData?.dozorPoint?.transitionHint?.text ||
+									pointData?.dozorPoint?.dozorPoint?.transitionHint?.text
+								}
 								time={pointData.transitTime}
 							/>
 						}
